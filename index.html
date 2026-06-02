@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botswana Archaeology Site Register</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* 🏞️ TSODILO HILLS MAIN COVER BACKGROUND */
+            background: linear-gradient(rgba(42, 30, 22, 0.45), rgba(42, 30, 22, 0.45)), 
+                        url('https://images.unsplash.com/photo-1601662528567-526cd06f6582?auto=format&fit=crop&q=80&w=1920') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+            display: block;
+        }
+        .container {
+            /* ⛪ OLD PALAPYE FORM AREA BACKGROUND */
+            background: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), 
+                        url('https://images.unsplash.com/photo-1599733589046-10c005739ef9?auto=format&fit=crop&q=80&w=800');
+            background-size: cover;
+            background-position: center;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); 
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto 30px auto;
+            box-sizing: border-box;
+            border-top: 6px solid #8c6239; 
+        }
+        h2, h3 { text-align: center; color: #5c3a21; margin-top: 0; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.05); } 
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #4a3b32; } 
+        input, textarea, select {
+            width: 100%; padding: 10px; border: 1px solid #d1c7bd; border-radius: 4px; box-sizing: border-box; font-size: 14px; background-color: rgba(250, 249, 246, 0.95);
+        }
+        input:focus, textarea:focus, select:focus { border-color: #a0522d; outline: none; background-color: #fff; }
+        
+        /* DYNAMIC BLINKING RED WARNING BANNER */
+        .accuracy-warning {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.5;
+            animation: warningPulse 2s infinite ease-in-out;
+        }
+        
+        @keyframes warningPulse {
+            0% { background-color: #fffaf0; border: 1px solid #feebc8; border-left: 5px solid #c96f2c; color: #6e4e37; }
+            50% { background-color: #fff5f5; border: 1px solid #feb2b2; border-left: 5px solid #e53e3e; color: #9b2c2c; box-shadow: 0 0 10px rgba(229, 62, 62, 0.15); }
+            100% { background-color: #fffaf0; border: 1px solid #feebc8; border-left: 5px solid #c96f2c; color: #6e4e37; }
+        }
+        .accuracy-warning strong { display: block; font-size: 14px; margin-bottom: 4px; animation: textPulse 2s infinite ease-in-out; }
+        @keyframes textPulse { 0% { color: #c96f2c; } 50% { color: #e53e3e; } 100% { color: #c96f2c; } }
+        
+        .geo-btn {
+            background-color: #5b7053; color: white; border: none; padding: 12px; width: 100%; 
+            border-radius: 4px; cursor: pointer; font-weight: bold; margin-bottom: 15px; font-size: 14px;
+        }
+        .geo-btn:hover { background-color: #485941; }
+        
+        .submit-btn {
+            background-color: #8c6239; color: white; border: none; padding: 14px; width: 100%; 
+            border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold;
+        }
+        .submit-btn:hover { background-color: #6e4c2b; }
+        
+        .coordinate-container {
+            background: rgba(247, 244, 238, 0.9); padding: 15px; border-radius: 4px; margin-bottom: 15px; border-left: 4px solid #8c6239;
+        }
+        .format-section { display: none; }
+        .format-section.active { display: block; }
+        
+        .status { text-align: center; font-weight: bold; margin-top: 15px; font-size: 14px; }
+        
+        /* 🏛️ DNMM CONTACT INFORMATION PANEL STYLE */
+        .dnmm-footer {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #d1c7bd;
+            font-size: 12px;
+            color: #5c4a3c;
+            line-height: 1.6;
+        }
+        .dnmm-footer h4 { margin: 0 0 8px 0; color: #8c6239; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
+        .dnmm-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
+        .dnmm-col { flex: 1; min-width: 200px; }
+
+        .table-container {
+            width: 100%; max-width: 1000px; background: rgba(255, 255, 255, 0.96); padding: 25px; border-radius: 8px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); margin: 0 auto; box-sizing: border-box; border-top: 5px solid #70535a;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ebdace; vertical-align: top; }
+        th { background-color: #5c3a21; color: white; font-weight: 600; }
+        tr:hover { background-color: #faf8f5; }
+        .search-box { margin-bottom: 15px; padding: 11px; width: 100%; border-radius: 4px; border: 1px solid #d1c7bd; box-sizing: border-box; font-size: 14px;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Botswana Archaeology Site Register</h2>
+    
+    <div class="accuracy-warning">
+        <strong>⚠️ CRITICAL FIELD ALERT: COORDINATE SYSTEM SPECIFICATIONS</strong>
+        This register securely accepts three formats: <strong>Decimal Degrees (DD)</strong>, <strong>Degrees Minutes Seconds (DMS)</strong>, and <strong>Universal Transverse Mercator (UTM, WGS84)</strong>. Select your framework below before entering values. To prevent severe spatial plotting disparities, verify orientation markings (e.g., South hemisphere offsets for UTM, and negative signs for Southern latitudes in DD).
+    </div>
+
+    <form id="coordForm">
+        <div class="form-group">
+            <label for="archaeologist">Archaeologist Name</label>
+            <input type="text" id="archaeologist" placeholder="Enter full investigator name" required>
+        </div>
+        <div class="form-group">
+            <label for="siteName">Site Name / ID Key</label>
+            <input type="text" id="siteName" placeholder="e.g., BAS-26 / Tsodilo Outcrop" required>
+        </div>
+        
+        <button type="button" class="geo-btn" onclick="getLocation()">📍 Auto-Capture GPS Location (Fills DD Layout)</button>
+        
+        <div class="coordinate-container">
+            <div class="form-group">
+                <label for="coordSystemSelector">Target Coordinate System Format</label>
+                <select id="coordSystemSelector" onchange="switchCoordinateSystem(this.value)">
+                    <option value="DD">Decimal Degrees (DD) — e.g., -24.6514, 25.9088</option>
+                    <option value="DMS">Degrees Minutes Seconds (DMS) — e.g., 24°39'05"S</option>
+                    <option value="UTM">Universal Transverse Mercator (UTM, WGS84)</option>
+                </select>
+            </div>
+
+            <div id="sectionDD" class="format-section active">
+                <div class="form-group">
+                    <label for="latitudeDD">Latitude (DD)</label>
+                    <input type="number" step="any" id="latitudeDD" placeholder="e.g., -24.6514">
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <label for="longitudeDD">Longitude (DD)</label>
+                    <input type="number" step="any" id="longitudeDD" placeholder="e.g., 25.9088">
+                </div>
+            </div>
+
+            <div id="sectionDMS" class="format-section">
+                <p style="font-size:12px; color:#7f6b5c; margin:0 0 10px 0;">Note: Entries calculated for Southern (-) and Eastern (+) Hemispheres.</p>
+                <div class="form-group">
+                    <label style="color:#8c6239;">Latitude (South)</label>
+                    <div style="display:flex; gap:5px;">
+                        <input type="number" id="latDeg" placeholder="Deg °" min="0" max="90">
+                        <input type="number" id="latMin" placeholder="Min '" min="0" max="59">
+                        <input type="number" step="any" id="latSec" placeholder="Sec "" min="0" max="59.99">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <label style="color:#8c6239;">Longitude (East)</label>
+                    <div style="display:flex; gap:5px;">
+                        <input type="number" id="lonDeg" placeholder="Deg °" min="0" max="180">
+                        <input type="number" id="lonMin" placeholder="Min '" min="0" max="59">
+                        <input type="number" step="any" id="lonSec" placeholder="Sec "" min="0" max="59.99">
+                    </div>
+                </div>
+            </div>
+
+            <div id="sectionUTM" class="format-section">
+                <div class="form-group">
+                    <label for="utmZone">UTM Grid Zone</label>
+                    <select id="utmZone">
+                        <option value="34">Zone 34S (Western / Central Botswana)</option>
+                        <option value="35" selected>Zone 35S (Eastern Botswana — Gaborone/Tlokweng)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <label for="utmEasting">Easting (Meters)</label>
+                    <input type="number" step="any" id="utmEasting" placeholder="6-digit e.g., 591822">
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <label for="utmNorthing">Northing (Meters)</label>
+                    <input type="number" step="any" id="utmNorthing" placeholder="7-digit e.g., 7272844">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+                <label for="accuracyInput">Accuracy / Error Margin (Meters)</label>
+                <input type="number" id="accuracyInput" value="5" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="siteDescription">Site Description (Temporal Framework / Material Culture)</label>
+            <textarea id="siteDescription" rows="3" placeholder="Specify diagnostic features..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Field Notes & Observations</label>
+            <textarea id="notes" rows="3" placeholder="Contextual observations, taphonomic factors, threats..."></textarea>
+        </div>
+        
+        <button type="submit" class="submit-btn">Commit Site to Ledger</button>
+    </form>
+    <div id="statusMessage" class="status"></div>
+
+    <div class="dnmm-footer">
+        <h4>Department of National Museum and Monuments (DNMM)</h4>
+        <div class="dnmm-grid">
+            <div class="dnmm-col">
+                <strong>📍 Physical Address:</strong><br>
+                Plot 181, Queen's Road<br>
+                Main Mall, Gaborone, Botswana
+            </div>
+            <div class="dnmm-col">
+                <strong>✉️ Postal Address & Contact:</strong><br>
+                Private Bag 00114, Gaborone<br>
+                📞 Tel: (+267) 397 4616 / Fax: (+267) 390 2797
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-container">
+    <h3>Registered Heritage Sites Database</h3>
+    
+    <input type="text" id="searchBox" class="search-box" onkeyup="filterTable()" placeholder="Search ledger by investigator, site name, or material descriptors...">
+    
+    <div style="overflow-x:auto;">
+        <table id="sitesTable">
+            <thead>
+                <tr>
+                    <th>Archaeologist</th>
+                    <th>Site Name / ID</th>
+                    <th style="min-width: 150px;">Mapping Link (Click to Navigate)</th>
+                    <th>Site Description</th>
+                    <th>Field Notes</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr>
+                    <td colspan="5" style="text-align:center; color: #7f6b5c;">Establishing live link to inventory ledger...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwNlQu1IGyFen9G9sPLbkM6Y7dbjXG0VK4aNnggdrTpWjG6S7o6wvJvZOfvXCiyduDA/exec';
+
+    window.onload = function() {
+        fetchPreviousSites();
+    };
+
+    function switchCoordinateSystem(selectedFormat) {
+        document.querySelectorAll('.format-section').forEach(function(el) {
+            el.classList.remove('active');
+        });
+        document.getElementById('section' + selectedFormat).classList.add('active');
+    }
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            document.getElementById('coordSystemSelector').value = 'DD';
+            switchCoordinateSystem('DD');
+            alert("Fetching device location details... Inputs will auto-populate.");
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    document.getElementById('latitudeDD').value = position.coords.latitude;
+                    document.getElementById('longitudeDD').value = position.coords.longitude;
+                    document.getElementById('accuracyInput').value = Math.round(position.coords.accuracy);
+                },
+                function(error) { alert("GPS Fault: " + error.message); },
+                { enableHighAccuracy: true, timeout: 20000 }
+            );
+        }
+    }
+
+    function convertUtmToDd(easting, northing, zone) {
+        const a = 6378137.0;
+        const f = 1 / 298.257223563;
+        const b = a * (1 - f);
+        const e2 = (a*a - b*b) / (a*a);
+        const ePrime2 = (a*a - b*b) / (b*b);
+        const k0 = 0.9996;
+        const falseEasting = 500000.0;
+        const falseNorthing = 10000000.0;
+
+        let x = easting - falseEasting;
+        let y = northing - falseNorthing; 
+        let utmZoneCM = ((zone * 6) - 183) * Math.PI / 180;
+
+        let n = (a - b) / (a + b);
+        let alpha = (a + b) / 2 * (1 + (n*n)/4 + (n*n*n*n)/144);
+        let beta = (3*n/2 - 27*n*n*n/32) * Math.PI / 180;
+        let gamma = (21*n*n/16 - 55*n*n*n*n/32) * Math.PI / 180;
+        let delta = (151*n*n*n/96) * Math.PI / 180;
+
+        let m = y / k0;
+        let phi1Rad = m / alpha;
+        
+        for (let j = 0; j < 5; j++) {
+            phi1Rad = (m + beta * Math.sin(2 * phi1Rad) + gamma * Math.sin(4 * phi1Rad) + delta * Math.sin(6 * phi1Rad)) / alpha;
+        }
+
+        let sinPhi1 = Math.sin(phi1Rad);
+        let cosPhi1 = Math.cos(phi1Rad);
+        let tanPhi1 = Math.tan(phi1Rad);
+
+        let t1 = tanPhi1 * tanPhi1;
+        let c1 = ePrime2 * cosPhi1 * cosPhi1;
+        let n1 = a / Math.sqrt(1 - e2 * sinPhi1 * sinPhi1);
+        let r1 = a * (1 - e2) / Math.pow(1 - e2 * sinPhi1 * sinPhi1, 1.5);
+        let d = x / (n1 * k0);
+
+        let lat = phi1Rad - (n1 * tanPhi1 / r1) * (d*d/2 - (5 + 3*t1 + 10*c1 - 4*c1*c1 - 9*ePrime2)*d*d*d*d/24);
+        let lon = utmZoneCM + (d - (1 + 2*t1 + c1)*d*d*d/6 + (5 - 2*c1 + 28*t1 - 3*c1*c1 + 8*c1 + 24*t1*t1)*d*d*d*d*d/120) / cosPhi1;
+
+        return { lat: lat * 180 / Math.PI, lon: lon * 180 / Math.PI };
+    }
+
+    document.getElementById('coordForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let finalLat = null;
+        let finalLon = null;
+        const currentSystem = document.getElementById('coordSystemSelector').value;
+
+        if (currentSystem === 'DD') {
+            finalLat = parseFloat(document.getElementById('latitudeDD').value);
+            finalLon = parseFloat(document.getElementById('longitudeDD').value);
+        } 
+        else if (currentSystem === 'DMS') {
+            let latD = parseFloat(document.getElementById('latDeg').value) || 0;
+            let latM = parseFloat(document.getElementById('latMin').value) || 0;
+            let latS = parseFloat(document.getElementById('latSec').value) || 0;
+            let lonD = parseFloat(document.getElementById('lonDeg').value) || 0;
+            let lonM = parseFloat(document.getElementById('lonMin').value) || 0;
+            let lonS = parseFloat(document.getElementById('lonSec').value) || 0;
+
+            finalLat = -(latD + (latM / 60) + (latS / 3600));
+            finalLon = (lonD + (lonM / 60) + (lonS / 3600));
+        } 
+        else if (currentSystem === 'UTM') {
+            let easting = parseFloat(document.getElementById('utmEasting').value);
+            let northing = parseFloat(document.getElementById('utmNorthing').value);
+            let zone = parseInt(document.getElementById('utmZone').value);
+
+            if (!easting || !northing) {
+                alert("Please declare your specific Easting and Northing values.");
+                return;
+            }
+            let converted = convertUtmToDd(easting, northing, zone);
+            finalLat = converted.lat;
+            finalLon = converted.lon;
+        }
+
+        if (!finalLat || !finalLon || isNaN(finalLat) || isNaN(finalLon)) {
+            alert("Translation processing faulted. Verify formatting properties and execute again.");
+            return;
+        }
+
+        const statusText = document.getElementById('statusMessage');
+        statusText.style.color = "#8c6239";
+        statusText.innerText = "Processing coordinates and writing to database...";
+        
+        const payload = {
+            archaeologist: document.getElementById('archaeologist').value,
+            siteName: document.getElementById('siteName').value,
+            latitude: finalLat,
+            longitude: finalLon,
+            accuracy: parseInt(document.getElementById('accuracyInput').value) || 5,
+            siteDescription: document.getElementById('siteDescription').value,
+            notes: document.getElementById('notes').value
+        };
+
+        fetch(scriptURL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            cache: 'no-cache', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify(payload) 
+        })
+        .then(function() {
+            statusText.style.color = "#5b7053";
+            statusText.innerText = "✅ Site committed successfully! Live data ledger refreshed.";
+            document.getElementById('coordForm').reset();
+            switchCoordinateSystem('DD');
+            fetchPreviousSites();
+        })
+        .catch(function(error) {
+            statusText.style.color = "#b23b3b";
+            statusText.innerText = "❌ Connection timeout during server write.";
+            console.error(error);
+        });
+    });
+
+    function fetchPreviousSites() {
+        const tbody = document.getElementById('tableBody');
+
+        fetch(scriptURL)
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            tbody.innerHTML = "";
+            if(data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No inventory records found.</td></tr>';
+                return;
+            }
+            
+            for (let i = data.length - 1; i >= 0; i--) {
+                let lat = data[i].latitude;
+                let lon = data[i].longitude;
+                let mapUrl = 'https://maps.google.com/?q=' + lat + ',' + lon;
+
+                let row = '<tr>' +
+                    '<td><b>' + data[i].archaeologist + '</b></td>' +
+                    '<td>' + data[i].siteName + '</td>' +
+                    '<td>' +
+                        '<a href="' + mapUrl + '" target="_blank" style="color: #8c6239; font-weight: bold; text-decoration: none;">' +
+                            '📍 Map view (' + parseFloat(lat).toFixed(5) + ', ' + parseFloat(lon).toFixed(5) + ')' +
+                        '</a>' +
+                    '</td>' +
+                    '<td>' + (data[i].siteDescription || '') + '</td>' +
+                    '<td><small>' + (data[i].notes || '') + '</small></td>' +
+                '</tr>';
+                tbody.innerHTML += row;
+            }
+        })
+        .catch(function(error) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#b23b3b;">Failed to establish connection.</td></tr>';
+            console.error(error);
+        });
+    }
+
+    function filterTable() {
+        let query = document.getElementById("searchBox").value.toLowerCase();
+        let rows = document.getElementById("tableBody").getElementsByTagName("tr");
+        
+        for (let i = 0; i < rows.length; i++) {
+            let rowText = rows[i].textContent.toLowerCase();
+            rows[i].style.display = rowText.includes(query) ? "" : "none";
+        }
+    }
+</script>
+</body>
+</html>
